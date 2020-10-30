@@ -1,0 +1,9 @@
+.idea/*
+node_modules/*
+package-lock.json
+log/*
+.DS_Store
+secret.js
+database.js
+keys/key.pem
+keys/my-pubcert.pem
