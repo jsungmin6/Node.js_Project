@@ -2,13 +2,13 @@ const { pool } = require('../../../config/database');
 const { logger } = require('../../../config/winston');
 const multer = require('multer');
 const path = require('path');
-const { fs } = require('fs');
+const fs = require('fs');
 
 // try {
 //     fs.readdirSync('uploads');
 // } catch (err) {
 //     logger.error(`The folder cannot be found. create 'uploads' folder \n: ${JSON.stringify(err)}`);
-//     fs.mkdirSync('uploads')
+//     fs.mkdirSync('uploads');
 // }
 
 // const upload = multer({
@@ -52,6 +52,7 @@ exports.names = async function (req, res) {
 
 exports.letters = async function (req, res) {
     const { name, letter } = req.body;
+    //TODO: name 과 letter을 받아서 Letter table에 insert 한다.
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {

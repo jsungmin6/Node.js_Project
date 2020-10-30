@@ -19,9 +19,9 @@ module.exports = function () {
   // app.use(express.static(process.cwd() + '/public'));
 
   /* App (Android, iOS) */
-  require("../src/app/routes/indexRoute")(app);
-  require("../src/app/routes/userRoute")(app);
-  require("../src/app/routes/testRoute")(app);
+  require("../src/web/routes/homeRoute")(app);
+  require("../src/web/routes/commentRoute")(app);
+  require("../src/web/routes/indexRoute")(app);
 
   /* Web */
   // require('../src/web/routes/indexRoute')(app);
