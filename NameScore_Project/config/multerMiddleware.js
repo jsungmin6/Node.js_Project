@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const multerS3 = require('multer-s3');
 const AWS = require("aws-sdk");
-const secret = require('./secret');
 AWS.config.loadFromPath(path.join(__dirname + "/awsconfig.json"));
 
 let s3 = new AWS.S3();
