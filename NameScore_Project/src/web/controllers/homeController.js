@@ -51,17 +51,17 @@ exports.names = async function (req, res) {
 };
 
 exports.letters = async function (req, res) {
-    const { name, letter } = req.body;
+    const { name, letter, letterType } = req.body;
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
             await connection.beginTransaction(); // START TRANSACTION
 
             const insertLetterQuery = `
-                        INSERT INTO Letter(Name, letter)
-                        VALUES (?, ?);
+                        INSERT INTO Letter(Name, letter, letterType)
+                        VALUES (?, ?, ?);
                             `;
-            const insertLetterParams = [name, letter];
+            const insertLetterParams = [name, letter, letterType];
             await connection.query(insertLetterQuery, insertLetterParams);
 
             await connection.commit(); // COMMIT
@@ -83,27 +83,15 @@ exports.letters = async function (req, res) {
 };
 
 exports.images = async function (req, res) {
-    const { name, img } = req.body;
-    //TODO: name과 이미지를 업로드. 이것도 letter table에 넣어야 함.
+    res.send('Uploaded! : ' + req.file)
+    console.log(req.file);
+};
 
+exports.uploads = async function (req, res) {
     try {
-        const connection = await pool.getConnection(async conn => conn);
-        try {
-            const [rows] = await connection.query(
-                `
-                SELECT id, email, nickname, createdAt, updatedAt 
-                FROM UserInfo
-                `
-            );
-            connection.release();
-            return res.json(rows);
-        } catch (err) {
-            logger.error(`example non transaction Query error\n: ${JSON.stringify(err)}`);
-            connection.release();
-            return false;
-        }
+        res.render('main');
     } catch (err) {
-        logger.error(`example non transaction DB Connection error\n: ${JSON.stringify(err)}`);
+        logger.error(`upload error\n: ${JSON.stringify(err)}`);
         return false;
     }
 };
