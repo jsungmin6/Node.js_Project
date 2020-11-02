@@ -4,5 +4,13 @@ html
     meta(chartset='utf-8')
   body
     form(action='images' method='post' enctype="multipart/form-data")
-      input(type='file' name='userfile')
-      input(type='submit')
+      p
+        input(type='file' name='userfile')
+      p
+        input(type='text' name='name')
+      p
+        textarea(name='letter')
+      p
+        input(type='text' name='letterType')
+      p
+        input(type='submit')

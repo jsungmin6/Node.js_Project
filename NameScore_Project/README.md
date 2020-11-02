@@ -19,6 +19,7 @@
 
 - 이미지와 text 업로드
 - 댓글 기능 구현
+- [API 명세서](https://web.postman.co/collections/11807633-b4687af0-3a7b-47fe-8f16-6b3050c42e5e?version=latest&workspace=5aff09eb-52c6-4d8a-80cb-021b1c27471c)
 
 ---
 
@@ -27,3 +28,5 @@
 - EC2, S3, RDS, nginx, docker, Node.js express , React
 
 ---
+
+4.

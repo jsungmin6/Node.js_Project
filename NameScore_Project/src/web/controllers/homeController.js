@@ -1,90 +1,70 @@
+const { json } = require('express');
 const { pool } = require('../../../config/database');
 const { logger } = require('../../../config/winston');
-const multer = require('multer');
-const path = require('path');
-const { fs } = require('fs');
+const homeQuery = require('../dao/homeQuery');
 
-// try {
-//     fs.readdirSync('uploads');
-// } catch (err) {
-//     logger.error(`The folder cannot be found. create 'uploads' folder \n: ${JSON.stringify(err)}`);
-//     fs.mkdirSync('uploads')
-// }
 
-// const upload = multer({
-//     storage: multer.diskStorage({
-//         destination(req, file, cb) {
-//             cb(null, 'uploads/');
-//         },
-//         filename(req, file, cb) {
-//             const ext = path.extname(file.originalname);
-//             cb(null, path.basename(file.originalname, ext) + Date.now() + ext)
-//         },
-//     }),
-//     limits: { fileSize: 5 * 1024 * 1024 }
-// });
+exports.goodLetter = async function (req, res) {
 
-exports.names = async function (req, res) {
-    const name = req.query.name
-    //TODO: 이름을 받으면 이름에 해당하는 편지내용을 2종류 타입으로 나눠서 최신순으로 리스트를 10개만 뿌려 줌.
-    //또한 타입별 count를 해서 몇퍼센트 비율인지 보여줌
-    try {
-        const connection = await pool.getConnection(async conn => conn);
-        try {
-            const [rows] = await connection.query(
-                `
-                SELECT id, email, nickname, createdAt, updatedAt 
-                FROM UserInfo
-                `
-            );
-            connection.release();
-            return res.json(rows);
-        } catch (err) {
-            logger.error(`example non transaction Query error\n: ${JSON.stringify(err)}`);
-            connection.release();
-            return false;
-        }
-    } catch (err) {
-        logger.error(`example non transaction DB Connection error\n: ${JSON.stringify(err)}`);
-        return false;
-    }
+    const name = req.params.name
+
+    const GoodLetters = await homeQuery.getGoodLetter(name);
+
+    return res.json({
+        isSuccess: true,
+        code: 200,
+        message: "칭찬 리스트 불러오기 완료",
+        result: GoodLetters
+    })
+
 };
+
+
+
+// exports.badLetter = async function (req, res) {
+//     const name = req.query.name
+//     //TODO: 이름을 받으면 이름에 해당하는 편지내용을 2종류 타입으로 나눠서 최신순으로 리스트를 10개만 뿌려 줌.
+//     //또한 타입별 count를 해서 몇퍼센트 비율인지 보여줌
+//     console.log(name)
+// };
+
 
 exports.letters = async function (req, res) {
     const { name, letter, letterType } = req.body;
-    try {
-        const connection = await pool.getConnection(async conn => conn);
-        try {
-            await connection.beginTransaction(); // START TRANSACTION
-
-            const insertLetterQuery = `
-                        INSERT INTO Letter(Name, letter, letterType)
-                        VALUES (?, ?, ?);
-                            `;
-            const insertLetterParams = [name, letter, letterType];
-            await connection.query(insertLetterQuery, insertLetterParams);
-
-            await connection.commit(); // COMMIT
-            connection.release();
-            return res.json({
-                isSuccess: true,
-                code: 200,
-                message: "작성완료",
-            })
-        } catch (err) {
-            logger.error(`example non transaction Query error\n: ${JSON.stringify(err)}`);
-            connection.release();
-            return false;
-        }
-    } catch (err) {
-        logger.error(`example non transaction DB Connection error\n: ${JSON.stringify(err)}`);
-        return false;
+    
+    const insertLetter = await homeQuery.insertLetterQuery(name,letter,letterType);
+            
+    if(insertLetter){
+        return res.json({
+            isSuccess: true,
+            code: 200,
+            message: "작성완료",
+        })
+    } else{
+        return false
     }
 };
 
+
+
 exports.images = async function (req, res) {
-    res.send('Uploaded! : ' + req.file)
-    console.log(req.file);
+    const name = req.body.name;
+    const letterType = Number(req.body.letterType);
+    const letterImg = req.file.location;
+
+    const insertLetterImg = await homeQuery.insertLetterImgQuery(name,letterImg,letterType);
+
+    if(insertLetterImg){
+        return res.json({
+            isSuccess: true,
+            code: 200,
+            message: "이미지 업로드 완료",
+        })
+    } else{
+        return false
+    }
+
+    res.render('main');
 };
 
 exports.uploads = async function (req, res) {
