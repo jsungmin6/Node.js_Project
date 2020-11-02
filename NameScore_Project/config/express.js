@@ -6,6 +6,7 @@ var cors = require("cors");
 
 module.exports = function () {
   const app = express();
+  app.use(express.static('public'));
   app.set('view engine', 'jade');
 
   app.use(compression());
@@ -17,7 +18,7 @@ module.exports = function () {
   app.use(methodOverride());
 
   app.use(cors());
-  app.use(express.static('public'));
+  
 
   /* App (Android, iOS) */
   require("../src/web/routes/homeRoute")(app);
