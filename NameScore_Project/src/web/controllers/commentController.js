@@ -8,6 +8,8 @@ exports.comments = async function (req, res) {
 
     const commentList = await commentQuery.getComments(letterIdx);
 
+    if (commentList.length == 0) return res.json({ isSuccess: false, code: 301, message: "댓글이 존재하지 않습니다." });
+
     return res.json({
         isSuccess: true,
         code: 200,

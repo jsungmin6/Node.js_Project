@@ -89,6 +89,7 @@ async function getGoodLetter(name) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
+            //TODO: 댓글 수 표시하는 쿼리 추가
             const query = `
             select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=1
                 `;
@@ -112,6 +113,7 @@ async function getBadLetter(name) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
+            //TODO: 댓글 수 표시하는 쿼리 추가
             const query = `
             select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=2
                 `;
