@@ -1,7 +1,35 @@
 const { pool } = require('../../../config/database');
 const { logger } = require('../../../config/winston');
 
-async function insertLetterQuery(name,letter,letterType) {
+
+
+async function getScore(name) {
+    try {
+        const connection = await pool.getConnection(async conn => conn);
+        try {
+            const query = `
+                select letterType, count(letterType) as count from Letter
+                where name= ?
+                group by letterType
+                `;
+            const params = [name];
+            const [rows] = await connection.query(query, params);
+
+            connection.release();
+            return rows
+
+        } catch (err) {
+            logger.error(`example non transaction Query error\n: ${JSON.stringify(err)}`);
+            connection.release();
+            return false;
+        }
+    } catch (err) {
+        logger.error(`example non transaction DB Connection error\n: ${JSON.stringify(err)}`);
+        return false;
+    }
+};
+
+async function insertLetterQuery(name, letter, letterType) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
@@ -29,7 +57,7 @@ async function insertLetterQuery(name,letter,letterType) {
     }
 };
 
-async function insertLetterImgQuery(name,letterImg,letterType) {
+async function insertLetterImgQuery(name, letterImg, letterType) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
@@ -57,12 +85,12 @@ async function insertLetterImgQuery(name,letterImg,letterType) {
     }
 };
 
-async function getGoodLetter(name){
+async function getGoodLetter(name) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
             const query = `
-            select * from letter where name = ? and letterType=1
+            select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=1
                 `;
             const params = [name];
             const [rows] = await connection.query(query, params);
@@ -80,12 +108,12 @@ async function getGoodLetter(name){
     }
 };
 
-async function getBadLetter(name){
+async function getBadLetter(name) {
     try {
         const connection = await pool.getConnection(async conn => conn);
         try {
             const query = `
-            select * from letter where name = ? and letterType=2
+            select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=2
                 `;
             const params = [name];
             const [rows] = await connection.query(query, params);
@@ -103,4 +131,10 @@ async function getBadLetter(name){
     }
 };
 
-module.exports = {insertLetterQuery,insertLetterImgQuery,getGoodLetter,getBadLetter};
+module.exports = {
+    insertLetterQuery,
+    insertLetterImgQuery,
+    getGoodLetter,
+    getBadLetter,
+    getScore
+};
