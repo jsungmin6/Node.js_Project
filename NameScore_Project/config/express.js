@@ -18,13 +18,12 @@ module.exports = function () {
   app.use(methodOverride());
 
   app.use(cors());
-  
+
 
   /* App (Android, iOS) */
   require("../src/web/routes/homeRoute")(app);
   require("../src/web/routes/commentRoute")(app);
   require("../src/web/routes/indexRoute")(app);
-
   /* Web */
   // require('../src/web/routes/indexRoute')(app);
 

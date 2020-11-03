@@ -1,6 +1,5 @@
 module.exports = function (app) {
-    const home = require('../controllers/commentController');
-    app.get('/names/:name', home.names);
-    app.route("/letters").post(home.letters);
-    app.route("/images").post(home.images);
+    const comment = require('../controllers/commentController');
+    app.get('/letters/:letterIdx/comments', comment.comments);
+    app.post('/comments', comment.createComments);
 };
