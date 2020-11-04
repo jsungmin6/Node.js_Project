@@ -91,7 +91,12 @@ async function getGoodLetter(name) {
         try {
             //TODO: 댓글 수 표시하는 쿼리 추가
             const query = `
-            select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=1
+                select L.letterIdx,L.letter,IFNULL(L.letterImg,'N')  as letterImg, IFNULL(CL.count,0) as commentNum, createdAt 
+                from Letter as L
+                left join (select letterIdx, count(letterIdx) as count from comment
+                group by letterIdx) as CL
+                on CL.letterIdx = L.letterIdx
+                where name = ? and letterType=1
                 `;
             const params = [name];
             const [rows] = await connection.query(query, params);
@@ -115,7 +120,12 @@ async function getBadLetter(name) {
         try {
             //TODO: 댓글 수 표시하는 쿼리 추가
             const query = `
-            select letterIdx,letter,IFNULL(letterImg,'N') as letterImg,createdAt  from Letter where name = ? and letterType=2
+                select L.letterIdx,L.letter,IFNULL(L.letterImg,'N')  as letterImg, IFNULL(CL.count,0) as commentNum, createdAt 
+                from Letter as L
+                left join (select letterIdx, count(letterIdx) as count from comment
+                group by letterIdx) as CL
+                on CL.letterIdx = L.letterIdx
+                where name = ? and letterType=2
                 `;
             const params = [name];
             const [rows] = await connection.query(query, params);
