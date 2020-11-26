@@ -7,6 +7,7 @@ var cors = require("cors");
 module.exports = function () {
   const app = express();
   app.use(express.static('public'));
+  
   app.set('view engine', 'jade');
 
   app.use(compression());

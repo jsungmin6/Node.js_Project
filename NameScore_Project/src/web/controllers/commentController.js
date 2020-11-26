@@ -2,6 +2,9 @@ const { pool } = require('../../../config/database');
 const { logger } = require('../../../config/winston');
 const commentQuery = require('../dao/commentQuery');
 
+//TODO: 밸리데이션 필요, query return 값이 false 일때 처리 필요
+
+
 
 exports.comments = async function (req, res) {
     const letterIdx = req.params.letterIdx
