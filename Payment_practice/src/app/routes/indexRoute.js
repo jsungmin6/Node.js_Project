@@ -2,5 +2,7 @@ module.exports = function (app) {
     const index = require('../controllers/indexController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
-    app.get('/test', index.test);
+    app.post('/createCard', index.createCard);
+    app.post('/bikReq', index.bikReq);
+    app.post('/payment', index.payment);
 };
