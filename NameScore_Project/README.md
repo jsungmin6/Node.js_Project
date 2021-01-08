@@ -10,7 +10,6 @@
 
 - AWS S3, lambda, RDS 사용
 - Node.js multer 사용해 이미지 처리
-- docker로 인프라 구축 실습
 - postman API 명세서 만들어보기
 
 ---
@@ -25,8 +24,6 @@
 
 3. 기술 스택
 
-- EC2, S3, RDS, nginx, docker, Node.js express , React
+- EC2, S3, RDS, nginx, Node.js express
 
 ---
-
-4.
